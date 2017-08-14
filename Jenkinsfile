@@ -1,5 +1,5 @@
 #!/usr/bin/groovy
-@Library('github.com/fabric8io/fabric8-pipeline-library@master')
+@Library('github.com/rupalibehera/fabric8-pipeline-library@release-version-211')
 
 def failIfNoTests = ""
 try {
@@ -22,8 +22,8 @@ try {
 } catch (Throwable e) {
   versionPrefix = "1.0"
 }
+def flow = new io.fabric8.Fabric8Commands()
 
-def canaryVersion = "${versionPrefix}.${env.BUILD_NUMBER}"
 def utils = new io.fabric8.Utils()
 def label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replace('-', '_').replace('/', '_')
 
@@ -39,6 +39,8 @@ mavenNode{
     container(name: 'maven') {
 
       stage('Build Release'){
+        def projectVersion = flow.getProjectVersion()
+        def canaryVersion = flow.getNextReleaseVersion(projectVersion)
         mavenCanaryRelease {
           version = canaryVersion
         }
