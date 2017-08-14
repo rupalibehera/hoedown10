@@ -40,7 +40,11 @@ mavenNode{
 
       stage('Build Release'){
         def projectVersion = flow.getProjectVersion()
+        echo "---------------------------"
+        echo "${projectVersion}"
         def canaryVersion = flow.getNextReleaseVersion(projectVersion)
+        echo "*****************************"
+        echo "${canaryVersion}"
         mavenCanaryRelease {
           version = canaryVersion
         }
